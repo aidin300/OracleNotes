@@ -1,0 +1,38 @@
+###########
+#Update ILOM Firmware Manually
+#This one is over network so quicker
+/sbin/ipmiflash -v -H <ilom_ip> -U <username> -E write ILOM-5_1_0_23_r146986-ORACLE_SERVER_X8-2L-rom.pkg force script config delaybios warning=0 --no-cert-check
+#This one is slower
+/sbin/ipmiflash -v write ILOM-5_1_0_23_r146986-ORACLE_SERVER_X8-2L-rom.pkg force script config delaybios warning=0
+
+
+########### 
+The disk firmware file will be available in the patch repository.
+
+# fwupdate update disk-firmware -n c1d0 -f SSDSCKKB4.XC311132.fw <<<<<<<<<<<<<<<<Disk0<<<<<<<<<<<<<<<<<<<<<<
+# fwupdate update disk-firmware -n c1d1 -f SSDSCKKB4.XC311132.fw <<<<<<<<<<<<<<<<Disk1<<<<<<<<<<<<<<<<<<<<<<
+
+OR
+
+# fwupdate update disk-firmware -f SSDSCKKB4.XC311132.fw -n c1d0 <<<<<<<<<<<<<<<<Disk0<<<<<<<<<<<<<<<<<<<<<<
+# fwupdate update disk-firmware -f SSDSCKKB4.XC311132.fw -n c1d1 <<<<<<<<<<<<<<<<Disk1<<<<<<<<<<<<<<<<<<<<<<
+
+
+If you cannot find the disk firmware file in the patch repository, the same can be downloaded from the ILOM package. the ILOM package will also contact the firmware file for the disk.
+
+ILOM package -> Patch 34323720: Oracle Server X8-2L SW 3.3.1 - FIRMWARE PACK.
+
+After the ILOM package is downloaded the disk firmware can be found in path -->p34323720_331_Generic\Oracle_Server_X8-2L-3.3.1.95759-FIRMWARE_PACK\Firmware\SSDSCKKB480G8
+
+
+########### 
+#ILOM IP
+ipmitool sunoem cli "show /SP/network" | grep " ipaddress"
+#Create user
+ipmitool sunoem cli "create /SP/users/<Username> password=<Password>"
+ipmitool sunoem cli "set /SP/users/<Username> role=aucro"
+
+###########
+## ODA SSH Keys
+odacli list-schedules
+odacli update-schedule -i <ID FROM ABOVE> -d
