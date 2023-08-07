@@ -32,6 +32,18 @@ ipmitool sunoem cli "show /SP/network" | grep " ipaddress"
 ipmitool sunoem cli "create /SP/users/<Username> password=<Password>"
 ipmitool sunoem cli "set /SP/users/<Username> role=aucro"
 
+#Enable IPMI v2
+show /SP/services/ipmi
+set /SP/services/ipmi v2_0_sessions=enabled
+
+
+#check ILOM connection on port 623
+ipmitool -v -H <ILOM-IP> -I lanplus -p 623 -U <username> -P <password> chassis status
+
+#ILOM Uptime
+ipmitool sunoem cli 'show /SP/clock' | grep uptime
+ipmitool bmc reset cold
+
 ###########
 ## ODA SSH Keys
 odacli list-schedules
